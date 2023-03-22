@@ -42,10 +42,7 @@ import ca.uqac.lif.textidote.cleaning.ReplacementCleaner;
 import ca.uqac.lif.textidote.cleaning.TextCleanerException;
 import ca.uqac.lif.textidote.cleaning.latex.LatexCleaner;
 import ca.uqac.lif.textidote.cleaning.markdown.MarkdownCleaner;
-import ca.uqac.lif.textidote.render.AnsiAdviceRenderer;
-import ca.uqac.lif.textidote.render.HtmlAdviceRenderer;
-import ca.uqac.lif.textidote.render.JsonAdviceRenderer;
-import ca.uqac.lif.textidote.render.SinglelineAdviceRenderer;
+import ca.uqac.lif.textidote.render.*;
 import ca.uqac.lif.textidote.rules.CheckCaptions;
 import ca.uqac.lif.textidote.rules.CheckCiteMix;
 import ca.uqac.lif.textidote.rules.CheckFigurePaths;
@@ -550,6 +547,9 @@ public class Main
 			{
 				stdout.disableColors();
 				renderer = new JsonAdviceRenderer(stdout, lang_s);
+			} else if (output_method.compareToIgnoreCase("workflow") == 0)
+			{
+				renderer = new WorkflowAdviceRenderer(stdout);
 			}
 		}
 		else
