@@ -20,10 +20,18 @@ package ca.uqac.lif.textidote.render;
 import ca.uqac.lif.textidote.Advice;
 import ca.uqac.lif.textidote.AdviceRenderer;
 import ca.uqac.lif.textidote.as.PositionRange;
+import ca.uqac.lif.textidote.rules.CheckLanguage;
 import ca.uqac.lif.util.AnsiPrinter;
 
 import java.util.List;
 import java.util.Map;
+
+enum WorkflowAdviceLogLevel {
+    debug,
+    notice,
+    warning,
+    error
+}
 
 /**
  * Renders a list of advice to a terminal, uses formatting that is understood
@@ -55,8 +63,14 @@ public class WorkflowAdviceRenderer extends AdviceRenderer
             for (Advice ad : list)
             {
                 PositionRange pr = ad.getPositionRange();
+                WorkflowAdviceLogLevel logLevel = WorkflowAdviceLogLevel.warning;
+                // LanguageTool rule
+                if (ad.getRule() instanceof CheckLanguage || ad.getRule() instanceof CheckLanguage.CheckLanguageSpecific) {
+                    logLevel = WorkflowAdviceLogLevel.notice;
+                }
                 String annotationTitle = String.format("%s: [%s]", ad.getShortMessage(), ad.getRule().getName());
-                m_printer.println(String.format("::warning file=%s,line=%d,col=%d,endLine=%d,endColumn=%d,title=%s::%s",
+                m_printer.println(String.format("::%s file=%s,line=%d,col=%d,endLine=%d,endColumn=%d,title=%s::%s",
+                        logLevel,
                         filename,
                         // Positions are 0 relative, github's lines are 1 relative
                         pr.getStart().getLine() + 1,
